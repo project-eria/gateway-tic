@@ -13,8 +13,15 @@ builds:
     goarch:
       - arm64
       - amd64
-      - arm/v6
-      - arm/v7
+      - arm
+    # GOARM to build for when GOARCH is arm.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    #
+    # Default: [ 6 ]
+    goarm:
+      - "6"
+      - "7"
+
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of uname.
