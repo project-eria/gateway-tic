@@ -1,0 +1,24 @@
+project_name: eria-gateway-tic
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+builds:
+  - binary: gateway-tic
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - arm64
+      - amd64
+      - arm/v6
+      - arm/v7
+archives:
+  - format: tar.gz
+    # this name template makes the OS and Arch compatible with the results of uname.
+  - name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: 'checksums.txt'
