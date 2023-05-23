@@ -1,0 +1,11 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  GoReleaser:
+    uses: project-eria/workflows/.github/workflows/release.yml@main
+    secrets: inherit

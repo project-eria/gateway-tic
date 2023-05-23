@@ -1,0 +1,12 @@
+name: Docker
+
+on:
+  push:
+    branches: [ "dev" ]
+    tags:
+      - "v*"
+
+jobs:
+  Docker:
+    uses: project-eria/workflows/.github/workflows/docker.yml@main
+    secrets: inherit

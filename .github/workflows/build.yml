@@ -1,0 +1,10 @@
+name: Build
+
+on:
+  push:
+    branches: [ "dev" ]
+
+jobs:
+  GoReleaser:
+    uses: project-eria/workflows/.github/workflows/build.yml@main
+    secrets: inherit
