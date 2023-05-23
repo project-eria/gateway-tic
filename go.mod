@@ -42,6 +42,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/project-eria/go-wot => ../go-wot
+// replace github.com/project-eria/go-wot => ../go-wot
 
-replace github.com/project-eria/eria-core => ../eria-core
+// replace github.com/project-eria/eria-core => ../eria-core
