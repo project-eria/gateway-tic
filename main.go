@@ -44,9 +44,7 @@ func main() {
 		zlog.Info().Msg("[main] Stopped")
 	}()
 
-	eria.Init("ERIA Teleinfo Gateway")
-	// Loading config
-	eria.LoadConfig(&config)
+	eria.Init("ERIA Teleinfo Gateway", &config)
 
 	port, err := teleinfo.OpenPort(config.SerialPort, config.Mode)
 	if err != nil {
@@ -61,11 +59,10 @@ func main() {
 		zlog.Panic().Err(err).Msg("[main] Error reading Teleinfo frame")
 	}
 
-	eriaServer := eria.NewServer(config.Host, config.Port, config.ExposedAddr, "")
-
 	td := setThings(initialFrame)
 
-	eriaThing, _ := eriaServer.AddThing("", td)
+	producer := eria.Producer("")
+	eriaThing, _ := producer.AddThing("", td)
 
 	framesChan := make(chan teleinfo.Frame, 10)
 
@@ -76,17 +73,17 @@ func main() {
 		for frame := range framesChan {
 			frameMap := frame.GetMap()
 			f := convertMap(frameMap)
-			eriaThing.SetPropertyValue("raw", f)
+			producer.SetPropertyValue(eriaThing, "raw", f)
 			baseValue, _ := frame.GetUIntField("BASE")
-			eriaThing.SetPropertyValue("indexBase", int(baseValue))
+			producer.SetPropertyValue(eriaThing, "indexBase", int(baseValue))
 			iinstValue, _ := frame.GetUIntField("IINST")
-			eriaThing.SetPropertyValue("iinst", int(iinstValue))
+			producer.SetPropertyValue(eriaThing, "iinst", int(iinstValue))
 			pappValue, _ := frame.GetUIntField("PAPP")
-			eriaThing.SetPropertyValue("papp", int(pappValue))
+			producer.SetPropertyValue(eriaThing, "papp", int(pappValue))
 		}
 	}()
 
-	eriaServer.StartServer()
+	eria.Start("")
 }
 
 func setThings(frame teleinfo.Frame) *thing.Thing {
@@ -101,16 +98,14 @@ func setThings(frame teleinfo.Frame) *thing.Thing {
 		[]string{},
 	)
 
-	rawData := dataSchema.NewObject(map[string]interface{}{})
+	rawData, _ := dataSchema.NewObject()
 
 	property := interaction.NewProperty(
 		"raw",
 		"Raw data",
 		"Raw data in json format",
-		true,
-		false,
-		true,
 		rawData,
+		interaction.PropertyReadOnly(true),
 	)
 	td.AddProperty(property)
 
@@ -118,17 +113,17 @@ func setThings(frame teleinfo.Frame) *thing.Thing {
 		// ADCO     : Adresse du compteur
 		// OPTARIF  : Option tarifaire choisie
 		// ISOUSC   : Intensité souscrite (A)
-		// BASE     : Index option Base (KWh)
-		// HCHC     : Index Heures Creuses (KWh)
-		// HCHP     : Index Heures Pleines (KWh)
-		// EJPHN    : Index option EJP Heures Normales
-		// EJPHPM   : Index option EJP Heures de Pointe Mobile
-		// BBRHCJB  : Index option Tempo Heures Creuses Jours Bleus
-		// BBRHPJB  : Index option Tempo Heures Pleines Jours Bleus
-		// BBRHCJW  : Index option Tempo Heures Creuses Jours Blancs
-		// BBRHPJW  : Index option Tempo Heures Pleines Jours Blancs
-		// BBRHCJR  : Index option Tempo Heures Creuses Jours Rouges
-		// BBRHPJR  : Index option Tempo Heures Pleines Jours Rouges
+		// BASE     : Index option Base (Wh)
+		// HCHC     : Index Heures Creuses (Wh)
+		// HCHP     : Index Heures Pleines (Wh)
+		// EJPHN    : Index option EJP Heures Normales (Wh)
+		// EJPHPM   : Index option EJP Heures de Pointe Mobile (Wh)
+		// BBRHCJB  : Index option Tempo Heures Creuses Jours Bleus (Wh)
+		// BBRHPJB  : Index option Tempo Heures Pleines Jours Bleus (Wh)
+		// BBRHCJW  : Index option Tempo Heures Creuses Jours Blancs (Wh)
+		// BBRHPJW  : Index option Tempo Heures Pleines Jours Blancs (Wh)
+		// BBRHCJR  : Index option Tempo Heures Creuses Jours Rouges (Wh)
+		// BBRHPJR  : Index option Tempo Heures Pleines Jours Rouges (Wh)
 		// PEJP     : Préavis Début EJP
 		// PTEC     : Période Tarifaire en cours
 		// DEMAIN   : Couleur du lendemain
@@ -140,39 +135,48 @@ func setThings(frame teleinfo.Frame) *thing.Thing {
 		// MOTDETAT : Mot d'état du compteur
 		if ticType == "BASE" {
 			baseValue, _ := frame.GetUIntField("BASE")
-			baseData := dataSchema.NewInteger(int(baseValue), "KWh", 0, 1000000000)
+			baseData, _ := dataSchema.NewInteger(
+				dataSchema.IntegerDefault(int(baseValue)),
+				dataSchema.IntegerUnit("%"),
+				dataSchema.IntegerMin(0),
+				dataSchema.IntegerMax(1000000000),
+			)
 			baseProperty := interaction.NewProperty(
 				"indexBase",
 				"BASE",
 				"Index option Base",
-				true,
-				false,
-				true,
 				baseData,
+				interaction.PropertyReadOnly(true),
 			)
 			td.AddProperty(baseProperty)
 			iinstValue, _ := frame.GetUIntField("IINST")
-			iinstData := dataSchema.NewInteger(int(iinstValue), "A", 0, 1000)
+			iinstData, _ := dataSchema.NewInteger(
+				dataSchema.IntegerDefault(int(iinstValue)),
+				dataSchema.IntegerUnit("A"),
+				dataSchema.IntegerMin(0),
+				dataSchema.IntegerMax(1000),
+			)
 			iinstProperty := interaction.NewProperty(
 				"iinst",
 				"IINST",
 				"Intensité Instantanée",
-				true,
-				false,
-				true,
 				iinstData,
+				interaction.PropertyReadOnly(true),
 			)
 			td.AddProperty(iinstProperty)
 			pappValue, _ := frame.GetUIntField("PAPP")
-			pappData := dataSchema.NewInteger(int(pappValue), "VA", 0, 1000)
+			pappData, _ := dataSchema.NewInteger(
+				dataSchema.IntegerDefault(int(pappValue)),
+				dataSchema.IntegerUnit("VA"),
+				dataSchema.IntegerMin(0),
+				dataSchema.IntegerMax(1000),
+			)
 			pappProperty := interaction.NewProperty(
 				"papp",
 				"PAPP",
 				"Puissance apparente",
-				true,
-				false,
-				true,
 				pappData,
+				interaction.PropertyReadOnly(true),
 			)
 			td.AddProperty(pappProperty)
 		}
