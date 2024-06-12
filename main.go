@@ -24,11 +24,8 @@ func readFrames(reader teleinfo.Reader, framesChan chan<- teleinfo.Frame) {
 }
 
 var config = struct {
-	Host        string `yaml:"host"`
-	Port        uint   `yaml:"port" default:"80"`
-	ExposedAddr string `yaml:"exposedAddr"`
-	SerialPort  string `yaml:"serialPort" required:"true"`
-	Mode        string `yaml:"mode" default:"historic"` // "standard"
+	SerialPort string `yaml:"serialPort" required:"true"`
+	Mode       string `yaml:"mode" default:"historic"` // "standard"
 }{}
 
 func convertMap(mapString map[string]string) map[string]interface{} {
@@ -63,6 +60,11 @@ func main() {
 
 	producer := eria.Producer("")
 	eriaThing, _ := producer.AddThing("", td)
+
+	producer.PropertyUseDefaultHandlers(eriaThing, "raw")
+	producer.PropertyUseDefaultHandlers(eriaThing, "indexBase")
+	producer.PropertyUseDefaultHandlers(eriaThing, "iinst")
+	producer.PropertyUseDefaultHandlers(eriaThing, "papp")
 
 	framesChan := make(chan teleinfo.Frame, 10)
 
