@@ -1,0 +1,17 @@
+# ERIA package description (orchestrator catalog, eria-manager DESIGN §12.3)
+name: gateway-tic
+title: Passerelle Linky (TIC)
+description: Télé-information client du compteur électrique (index, intensité, puissance apparente)
+kind: gateway
+requires: [linky]
+
+exec:
+  args: ["--config-path", "{config}"]
+  health: { url: "http://127.0.0.1:{port}/eria", grace: 20s, interval: 10s }
+
+config: |
+  host: 0.0.0.0
+  port: 20000
+  location: Europe/Paris
+  serialPort: /dev/serial/by-id/<adaptateur USB-série>
+  mode: historic
