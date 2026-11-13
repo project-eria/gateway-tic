@@ -4,8 +4,8 @@ go 1.26.0
 
 require (
 	github.com/ferllings/goteleinfo v0.0.0-20230423171243-b6c16da4c237
-	github.com/project-eria/eria-core v1.22.0
-	github.com/project-eria/go-wot v1.15.0
+	github.com/project-eria/eria-core v1.23.0
+	github.com/project-eria/go-wot v1.16.0
 	github.com/rs/zerolog v1.35.1
 )
 

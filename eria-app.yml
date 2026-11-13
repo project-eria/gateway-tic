@@ -1,4 +1,4 @@
-# ERIA package description (orchestrator catalog, eria-manager DESIGN §12.3)
+# ERIA package description (orchestrator catalog, eria-coordinator DESIGN §12.3)
 name: gateway-tic
 title: Passerelle Linky (TIC)
 description: Télé-information client du compteur électrique (index, intensité, puissance apparente)
