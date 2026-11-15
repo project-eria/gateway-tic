@@ -214,10 +214,10 @@ github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/project-eria/eria-core v1.23.1 h1:XWLmgN0PUlVAAR+C4z8QUw7mcVIozyTSuadUrRags0w=
-github.com/project-eria/eria-core v1.23.1/go.mod h1:MNRB6GoU5XJcGe7oc9AgZ/dVQ/VdPo6ltfpJuLTtBdI=
-github.com/project-eria/go-wot v1.16.0 h1:EDQ7C0weDkHVTnrz4V1DkdZI5c/sgFSrA9tiGUBCvgY=
-github.com/project-eria/go-wot v1.16.0/go.mod h1:1kEYDHwaCl339L5a5/LfKNa8vq4EKqzf4diQPZo6hes=
+github.com/project-eria/eria-core v1.23.3 h1:829X3ESwwIRlfmKwCXuX0j4yYNJcUTFQA1KsCFzLuK4=
+github.com/project-eria/eria-core v1.23.3/go.mod h1:hoz2gmk765sVGVjT8Sak0vgEN6lJlAs/NDlX1tbnpbI=
+github.com/project-eria/go-wot v1.16.2 h1:NMyV+OV6m9GB7IzDjmGUxOvcTLkuUjCVw07X1aEWyiU=
+github.com/project-eria/go-wot v1.16.2/go.mod h1:t1PPw3IjNXMsvRUVycKL1a0lmmIs8vkd2ahYyiaVJRs=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
 github.com/prometheus/client_golang v1.0.0/go.mod h1:db9x61etRT2tGnBNRi70OPL5FsnadC4Ky3P0J6CfImo=
 github.com/prometheus/client_golang v1.7.1/go.mod h1:PY5Wy2awLA44sXw4AOSfFBetzPP4j5+D6mVACh+pe2M=
